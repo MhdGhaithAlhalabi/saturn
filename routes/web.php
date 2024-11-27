@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PermissionController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
@@ -36,6 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -43,6 +45,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/permissions', [PermissionController::class, 'store'])->name('admin.permissions.store');
     Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('admin.permissions.destroy');
 });
+Route::get('/orders/{orderId}/pallets', [OrderController::class, 'getPallets']);
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::post('/orders/calculate-pallets', [OrderController::class, 'calculatePallets']);
+Route::post('/orders/store', [OrderController::class, 'store']);
+Route::get('/products/details/{code}', [OrderController::class, 'getProductDetails']);
+
+
+
 Route::middleware(['auth', 'can:view item'])->group(function () {
     Route::get('/items', [ProductController::class, 'index'])->name('items.index');
     Route::get('/items/create', [ProductController::class, 'create'])->name('items.create');

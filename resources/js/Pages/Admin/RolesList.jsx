@@ -5,12 +5,21 @@ const RolesList = () => {
   const { roles, permissions } = usePage().props; // الأدوار والصلاحيات المرسلة من Laravel
   const [editingRole, setEditingRole] = useState(null); // الدور الجاري تعديله
   const [form, setForm] = useState({}); // نموذج التعديل
+  const [newRole, setNewRole] = useState("");
+
 
   const handleEditClick = (role) => {
     setEditingRole(role.id); // تعيين الدور الجاري تعديله
     setForm({
       name: role.name,
       permissions: role.permissions.map((perm) => perm.name),
+    });
+  };
+
+  const handleAddRole = (e) => {
+    e.preventDefault();
+    router.post("/admin/roles", { name: newRole }, {
+      onSuccess: () => setNewRole(""),
     });
   };
 
@@ -46,7 +55,28 @@ const RolesList = () => {
   };
 
   return (
+    <>
+
     <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
+           {/* إضافة صلاحية جديدة */}
+           <form onSubmit={handleAddRole} className="flex gap-2 mb-4">
+          <input
+            type="text"
+            name="name"
+            value={newRole}
+            onChange={(e) => setNewRole(e.target.value)}
+            placeholder="New Role Name"
+            className="w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Add Role
+          </button>
+
+        </form>
       <h2 className="text-lg font-semibold mb-4">Roles List</h2>
       <table className="min-w-full border-collapse border border-gray-300">
         <thead>
@@ -127,6 +157,7 @@ const RolesList = () => {
         </tbody>
       </table>
     </div>
+    </>
   );
 };
 

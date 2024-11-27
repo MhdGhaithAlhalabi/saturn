@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique(); // كود المنتج (إجباري)
             $table->string('name')->nullable(); // اسم المنتج (اختياري)
+            $table->string('g_name')->nullable();
+            $table->text('description')->nullable();
+            $table->float('length')->nullable(); // الطول
+            $table->float('width')->nullable();  // العرض
+            $table->float('height')->nullable(); // الارتفاع
             $table->timestamps();
         });
     }

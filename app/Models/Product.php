@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'name'];
+    protected $fillable = ['code', 'name','length','width','height','box_id'];
 
     public function locations()
     {
@@ -22,6 +22,11 @@ class Product extends Model
     {
         return $this->locations->sum('pivot.quantity');
     }
+    public function box()
+{
+    return $this->belongsTo(Box::class,'box_id');
+}
+
 
 
 }
